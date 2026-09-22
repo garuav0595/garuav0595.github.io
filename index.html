@@ -365,20 +365,38 @@
     text-align:center; color:var(--text-dim); font-size:0.82rem; margin-top:18px;
   }
 
-  /* ---------- Mini CI/CD gif ---------- */
-  .mini-gif-wrap{
-    display:flex; flex-direction:column; align-items:center; gap:10px;
+  /* ---------- DevOps infinity loop ---------- */
+  .devops-loop-wrap{
+    display:flex; flex-direction:column; align-items:center; gap:12px;
     padding:0 6vw 60px;
   }
-  .mini-gif-frame{
-    width:820px; max-width:92vw; border-radius:10px; overflow:hidden;
-    border:1px solid var(--panel-border); background:var(--panel);
-    box-shadow:0 0 24px rgba(0,240,255,0.15);
-  }
-  .mini-gif-frame img{ display:block; width:100%; height:auto; }
-  .mini-gif-caption{
+  .devops-loop{ width:820px; max-width:92vw; }
+  .devops-loop-caption{
     font-size:0.68rem; letter-spacing:2px; text-transform:uppercase; color:var(--text-dim);
   }
+  .gear-rim{ transform-origin:center; transform-box:fill-box; }
+  .dev-rim{ animation: spinCW 16s linear infinite; }
+  .ops-rim{ animation: spinCCW 16s linear infinite; }
+  @keyframes spinCW{ from{ transform:rotate(0deg); } to{ transform:rotate(360deg); } }
+  @keyframes spinCCW{ from{ transform:rotate(0deg); } to{ transform:rotate(-360deg); } }
+  .loop-label{
+    font-family:'JetBrains Mono', monospace; font-size:12px; font-weight:600;
+    letter-spacing:1px; fill:var(--text-dim); text-anchor:middle;
+  }
+  .loop-center{
+    font-family:'Orbitron', sans-serif; font-size:20px; font-weight:900; text-anchor:middle;
+  }
+  .dev-center{ fill:var(--cyan); }
+  .ops-center{ fill:var(--magenta); }
+  .flow-dot-dev{ fill:var(--cyan); filter:drop-shadow(0 0 5px var(--cyan)); }
+  .flow-dot-ops{ fill:var(--magenta); filter:drop-shadow(0 0 5px var(--magenta)); }
+  .connector{
+    fill:none; stroke-width:2.4; stroke-linecap:round; stroke-dasharray:6 6;
+    animation: dashFlow 1.4s linear infinite;
+  }
+  .connector.top{ stroke:var(--cyan); }
+  .connector.bottom{ stroke:var(--magenta); }
+  @keyframes dashFlow{ to{ stroke-dashoffset:-24; } }
 
   /* ---------- Contact ---------- */
   .contact-panel{
@@ -454,11 +472,49 @@
 
 <main>
 
-  <div class="mini-gif-wrap reveal">
-    <div class="mini-gif-frame">
-      <img src="https://raw.githubusercontent.com/garuav0595/end-to-end-aws-devops-project/main/docs/pipeline-flow.gif" alt="CI/CD pipeline animation: build, scan, push, deploy, sync" loading="lazy" />
-    </div>
-    <span class="mini-gif-caption">CI/CD in motion</span>
+  <div class="devops-loop-wrap reveal">
+    <svg class="devops-loop" viewBox="0 0 480 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="DevOps infinity loop: plan, code, build, test, release, deploy, operate, monitor">
+      <defs>
+        <marker id="arrowCyan" markerWidth="7" markerHeight="7" refX="3.4" refY="3.4" orient="auto">
+          <path d="M0,0 L7,3.4 L0,6.8 Z" fill="var(--cyan)"/>
+        </marker>
+        <marker id="arrowMag" markerWidth="7" markerHeight="7" refX="3.4" refY="3.4" orient="auto">
+          <path d="M0,0 L7,3.4 L0,6.8 Z" fill="var(--magenta)"/>
+        </marker>
+      </defs>
+
+      <path class="connector top" d="M197,91 Q240,58 283,91" marker-end="url(#arrowCyan)"/>
+      <path class="connector bottom" d="M283,149 Q240,182 197,149" marker-end="url(#arrowMag)"/>
+
+      <g class="gear-rim dev-rim">
+        <circle cx="135" cy="120" r="68" fill="none" stroke="var(--cyan)" stroke-width="3" stroke-dasharray="7 6" opacity="0.85"/>
+        <circle cx="135" cy="52" r="3.2" fill="var(--cyan)"/>
+      </g>
+      <circle cx="135" cy="120" r="53" fill="none" stroke="rgba(0,240,255,0.15)" stroke-width="1"/>
+      <text class="loop-label" x="95" y="66">PLAN</text>
+      <text class="loop-label" x="175" y="66">CODE</text>
+      <text class="loop-label" x="179" y="178">BUILD</text>
+      <text class="loop-label" x="91" y="178">TEST</text>
+      <text class="loop-center dev-center" x="135" y="127">DEV</text>
+      <circle class="flow-dot-dev" r="4">
+        <animateMotion dur="5s" repeatCount="indefinite" path="M135,52 A68,68 0 1,1 134.99,52 Z"/>
+      </circle>
+
+      <g class="gear-rim ops-rim">
+        <circle cx="345" cy="120" r="68" fill="none" stroke="var(--magenta)" stroke-width="3" stroke-dasharray="7 6" opacity="0.85"/>
+        <circle cx="345" cy="52" r="3.2" fill="var(--magenta)"/>
+      </g>
+      <circle cx="345" cy="120" r="53" fill="none" stroke="rgba(255,46,203,0.15)" stroke-width="1"/>
+      <text class="loop-label" x="305" y="66">RELEASE</text>
+      <text class="loop-label" x="389" y="66">DEPLOY</text>
+      <text class="loop-label" x="393" y="178">OPERATE</text>
+      <text class="loop-label" x="301" y="178">MONITOR</text>
+      <text class="loop-center ops-center" x="345" y="127">OPS</text>
+      <circle class="flow-dot-ops" r="4">
+        <animateMotion dur="5s" repeatCount="indefinite" path="M345,52 A68,68 0 1,0 345.01,52 Z"/>
+      </circle>
+    </svg>
+    <span class="devops-loop-caption">CI/CD in motion</span>
   </div>
 
   <section id="about">
