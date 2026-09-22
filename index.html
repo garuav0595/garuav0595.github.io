@@ -128,6 +128,25 @@
     text-align:center;
     padding:140px 6vw 80px;
   }
+  .avatar-ring{
+    position:relative;
+    width:132px; height:132px; border-radius:50%;
+    margin-bottom:26px;
+    box-shadow:0 0 40px rgba(0,240,255,0.3);
+  }
+  .avatar-ring::before{
+    content:''; position:absolute; inset:-4px; border-radius:50%;
+    background:conic-gradient(from 0deg, var(--cyan), var(--violet), var(--magenta), var(--cyan));
+    animation:spinRing 6s linear infinite;
+    z-index:0;
+  }
+  @keyframes spinRing{ to{ transform:rotate(360deg); } }
+  .avatar{
+    position:relative; z-index:1;
+    width:100%; height:100%; border-radius:50%;
+    object-fit:cover; display:block;
+    border:3px solid var(--bg);
+  }
   .eyebrow{
     font-size:0.78rem; letter-spacing:4px; text-transform:uppercase;
     color:var(--cyan);
@@ -401,7 +420,10 @@
 </nav>
 
 <header class="hero" id="home">
-  <div class="eyebrow">&lt; Available for DevOps &amp; Platform Engineering /&gt;</div>
+  <div class="avatar-ring">
+    <img class="avatar" src="assets/gaurav-khatri.jpg" alt="Gaurav Khatri" width="132" height="132" loading="eager" />
+  </div>
+  <div class="eyebrow">Open to DevOps &amp; Platform Engineering Opportunities</div>
   <h1>Gaurav&nbsp;Khatri</h1>
   <div class="hero-sub">I build <span id="typed"></span><span class="caret">&nbsp;</span></div>
   <p class="hero-desc">
