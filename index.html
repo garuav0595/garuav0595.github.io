@@ -210,7 +210,7 @@
   .btn-ghost:hover{ background:rgba(0,240,255,0.08); transform:translateY(-3px); border-color:var(--cyan); }
 
   .scroll-hint{
-    position:absolute; bottom:34px; left:50%; transform:translateX(-50%);
+    margin-top:56px;
     font-size:0.7rem; letter-spacing:3px; color:var(--text-dim);
     display:flex; flex-direction:column; align-items:center; gap:8px;
   }
@@ -365,6 +365,21 @@
     text-align:center; color:var(--text-dim); font-size:0.82rem; margin-top:18px;
   }
 
+  /* ---------- Mini CI/CD gif ---------- */
+  .mini-gif-wrap{
+    display:flex; flex-direction:column; align-items:center; gap:10px;
+    padding:0 6vw 60px;
+  }
+  .mini-gif-frame{
+    width:220px; max-width:60vw; border-radius:10px; overflow:hidden;
+    border:1px solid var(--panel-border); background:var(--panel);
+    box-shadow:0 0 24px rgba(0,240,255,0.15);
+  }
+  .mini-gif-frame img{ display:block; width:100%; height:auto; }
+  .mini-gif-caption{
+    font-size:0.68rem; letter-spacing:2px; text-transform:uppercase; color:var(--text-dim);
+  }
+
   /* ---------- Contact ---------- */
   .contact-panel{
     background:var(--panel); border:1px solid var(--panel-border); border-radius:var(--radius);
@@ -438,6 +453,13 @@
 </header>
 
 <main>
+
+  <div class="mini-gif-wrap reveal">
+    <div class="mini-gif-frame">
+      <img src="https://raw.githubusercontent.com/garuav0595/end-to-end-aws-devops-project/main/docs/pipeline-flow.gif" alt="CI/CD pipeline animation: build, scan, push, deploy, sync" loading="lazy" />
+    </div>
+    <span class="mini-gif-caption">CI/CD in motion</span>
+  </div>
 
   <section id="about">
     <div class="section-head reveal">
