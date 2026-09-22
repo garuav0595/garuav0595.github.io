@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Gaurav Khatri — DevOps Engineer</title>
+<meta name="description" content="Gaurav Khatri — DevOps Engineer building self-service infra tooling and scalable cloud-native systems with Kubernetes, Docker, Terraform, and GitOps." />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#05070d;
+    --bg-alt:#080b14;
+    --panel:rgba(18,22,35,0.55);
+    --panel-border:rgba(0,240,255,0.18);
+    --cyan:#00f0ff;
+    --cyan-dim:#0891a8;
+    --magenta:#ff2ecb;
+    --violet:#8a5cff;
+    --text:#e8ecf5;
+    --text-dim:#8a93ab;
+    --success:#39ff9a;
+    --radius:14px;
+    --maxw:1180px;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  html{scroll-behavior:smooth;}
+
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'JetBrains Mono', monospace;
+    line-height:1.6;
+    overflow-x:hidden;
+    position:relative;
+  }
+
+  h1,h2,h3,.brand{
+    font-family:'Orbitron', sans-serif;
+  }
+
+  a{color:inherit; text-decoration:none;}
+
+  ::selection{background:var(--cyan); color:#000;}
+
+  /* ---------- Background layers ---------- */
+  #bg-canvas{
+    position:fixed; inset:0; width:100%; height:100%;
+    z-index:0; pointer-events:none;
+  }
+
+  .grid-floor{
+    position:fixed;
+    left:0; right:0; bottom:0;
+    height:55vh;
+    z-index:0;
+    pointer-events:none;
+    background-image:
+      linear-gradient(rgba(0,240,255,0.14) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,240,255,0.14) 1px, transparent 1px);
+    background-size:48px 48px;
+    -webkit-mask-image: linear-gradient(to top, black, transparent);
+            mask-image: linear-gradient(to top, black, transparent);
+    transform: perspective(500px) rotateX(60deg);
+    transform-origin:bottom;
+    opacity:0.5;
+    animation: floorMove 6s linear infinite;
+  }
+  @keyframes floorMove{
+    from{ background-position: 0 0, 0 0; }
+    to{ background-position: 0 48px, 48px 0; }
+  }
+
+  .glow-orb{
+    position:fixed;
+    width:45vw; height:45vw;
+    border-radius:50%;
+    filter:blur(110px);
+    z-index:0;
+    pointer-events:none;
+    opacity:0.28;
+  }
+  .glow-orb.one{ top:-15vw; left:-10vw; background:var(--cyan); }
+  .glow-orb.two{ bottom:-20vw; right:-15vw; background:var(--magenta); }
+
+  main, header, footer{ position:relative; z-index:1; }
+
+  /* ---------- Nav ---------- */
+  nav{
+    position:fixed; top:0; left:0; right:0; z-index:50;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 6vw;
+    background:rgba(5,7,13,0.55);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    border-bottom:1px solid rgba(0,240,255,0.12);
+  }
+  .brand{
+    font-weight:700; font-size:1.05rem; letter-spacing:2px;
+    color:var(--cyan);
+    text-shadow:0 0 14px rgba(0,240,255,0.55);
+  }
+  .brand span{ color:var(--text); }
+  .nav-links{
+    display:flex; gap:2rem; list-style:none;
+    font-size:0.82rem; letter-spacing:1px; text-transform:uppercase;
+  }
+  .nav-links a{
+    position:relative; color:var(--text-dim); transition:color .25s ease;
+    padding-bottom:4px;
+  }
+  .nav-links a::after{
+    content:''; position:absolute; left:0; bottom:0; width:0; height:1px;
+    background:var(--cyan); box-shadow:0 0 8px var(--cyan);
+    transition:width .25s ease;
+  }
+  .nav-links a:hover, .nav-links a.active{ color:var(--text); }
+  .nav-links a:hover::after, .nav-links a.active::after{ width:100%; }
+  .nav-toggle{ display:none; }
+
+  /* ---------- Hero ---------- */
+  header.hero{
+    min-height:100vh;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center;
+    padding:140px 6vw 80px;
+  }
+  .eyebrow{
+    font-size:0.78rem; letter-spacing:4px; text-transform:uppercase;
+    color:var(--cyan);
+    border:1px solid rgba(0,240,255,0.35);
+    padding:6px 16px; border-radius:999px;
+    display:inline-block; margin-bottom:28px;
+    background:rgba(0,240,255,0.06);
+    box-shadow:0 0 20px rgba(0,240,255,0.15) inset;
+  }
+  .hero h1{
+    font-size:clamp(2.4rem, 6vw, 4.6rem);
+    font-weight:900;
+    line-height:1.05;
+    background:linear-gradient(120deg, #fff 10%, var(--cyan) 45%, var(--violet) 75%, var(--magenta) 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    text-shadow:0 0 60px rgba(0,240,255,0.15);
+    margin-bottom:22px;
+  }
+  .hero-sub{
+    font-size:clamp(1rem, 2.2vw, 1.35rem);
+    color:var(--text-dim);
+    min-height:2.4em;
+    display:flex; align-items:center; justify-content:center;
+    margin-bottom:14px;
+  }
+  #typed{ color:var(--cyan); font-weight:500; }
+  .caret{
+    display:inline-block; width:2px; margin-left:3px;
+    background:var(--cyan); animation:blink 1s steps(1) infinite;
+  }
+  @keyframes blink{ 50%{ opacity:0; } }
+
+  .hero-desc{
+    max-width:640px;
+    color:var(--text-dim);
+    font-size:0.95rem;
+    margin:18px 0 40px;
+  }
+
+  .cta-row{ display:flex; gap:18px; flex-wrap:wrap; justify-content:center; }
+
+  .btn{
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.85rem; letter-spacing:1px;
+    padding:14px 30px; border-radius:8px;
+    cursor:pointer; border:1px solid transparent;
+    transition:transform .2s ease, box-shadow .2s ease, background .2s ease;
+    display:inline-flex; align-items:center; gap:10px;
+  }
+  .btn-primary{
+    background:linear-gradient(120deg, var(--cyan), var(--violet));
+    color:#04121a; font-weight:700;
+    box-shadow:0 0 30px rgba(0,240,255,0.35);
+  }
+  .btn-primary:hover{ transform:translateY(-3px); box-shadow:0 0 42px rgba(0,240,255,0.55); }
+  .btn-ghost{
+    border-color:rgba(0,240,255,0.35);
+    color:var(--text);
+    background:rgba(255,255,255,0.02);
+  }
+  .btn-ghost:hover{ background:rgba(0,240,255,0.08); transform:translateY(-3px); border-color:var(--cyan); }
+
+  .scroll-hint{
+    position:absolute; bottom:34px; left:50%; transform:translateX(-50%);
+    font-size:0.7rem; letter-spacing:3px; color:var(--text-dim);
+    display:flex; flex-direction:column; align-items:center; gap:8px;
+  }
+  .scroll-hint .line{
+    width:1px; height:34px;
+    background:linear-gradient(var(--cyan), transparent);
+    animation:scrollLine 1.8s ease-in-out infinite;
+  }
+  @keyframes scrollLine{ 0%{ transform:scaleY(0); transform-origin:top;} 50%{ transform:scaleY(1); transform-origin:top;} 51%{ transform-origin:bottom;} 100%{ transform:scaleY(0); transform-origin:bottom;} }
+
+  /* ---------- Section shell ---------- */
+  section{ padding:110px 6vw; max-width:var(--maxw); margin:0 auto; }
+  .section-head{ margin-bottom:56px; text-align:center; }
+  .section-tag{
+    font-size:0.75rem; letter-spacing:4px; text-transform:uppercase;
+    color:var(--magenta); margin-bottom:12px; display:block;
+  }
+  .section-title{
+    font-size:clamp(1.7rem, 3.6vw, 2.6rem); font-weight:700;
+  }
+  .section-title .accent{ color:var(--cyan); }
+
+  .reveal{ opacity:0; transform:translateY(28px); transition:opacity .7s ease, transform .7s ease; }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+
+  /* ---------- About ---------- */
+  .about-grid{
+    display:grid; grid-template-columns:1.1fr 0.9fr; gap:60px; align-items:center;
+  }
+  .about-text p{ color:var(--text-dim); margin-bottom:18px; font-size:0.95rem; }
+  .about-text strong{ color:var(--text); font-weight:500; }
+  .stat-row{ display:flex; gap:34px; margin-top:34px; flex-wrap:wrap; }
+  .stat{ }
+  .stat .num{
+    font-family:'Orbitron', sans-serif; font-size:2rem; font-weight:700;
+    color:var(--cyan); text-shadow:0 0 20px rgba(0,240,255,0.4);
+  }
+  .stat .label{ font-size:0.72rem; color:var(--text-dim); letter-spacing:1px; text-transform:uppercase; }
+
+  .terminal{
+    background:var(--panel);
+    border:1px solid var(--panel-border);
+    border-radius:var(--radius);
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    box-shadow:0 0 40px rgba(0,240,255,0.08);
+    overflow:hidden;
+  }
+  .terminal-bar{
+    display:flex; align-items:center; gap:8px;
+    padding:12px 16px; border-bottom:1px solid var(--panel-border);
+    background:rgba(255,255,255,0.02);
+  }
+  .dot{ width:10px; height:10px; border-radius:50%; }
+  .dot.red{ background:#ff5f56; } .dot.yellow{ background:#ffbd2e; } .dot.green{ background:#27c93f; }
+  .terminal-title{ margin-left:auto; font-size:0.72rem; color:var(--text-dim); }
+  .terminal-body{ padding:22px; font-size:0.82rem; }
+  .terminal-body .l{ margin-bottom:10px; white-space:pre-wrap; }
+  .prompt{ color:var(--success); }
+  .cmd{ color:var(--text); }
+  .out{ color:var(--text-dim); }
+  .key{ color:var(--cyan); }
+  .val{ color:var(--magenta); }
+
+  /* ---------- Skills ---------- */
+  .skills-grid{
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:16px;
+  }
+  .skill-card{
+    background:var(--panel); border:1px solid var(--panel-border); border-radius:var(--radius);
+    padding:20px 16px; text-align:center;
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    transition:transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+  }
+  .skill-card:hover{
+    transform:translateY(-6px);
+    border-color:var(--cyan);
+    box-shadow:0 10px 30px rgba(0,240,255,0.18);
+  }
+  .skill-card .ic{ font-size:1.6rem; margin-bottom:10px; display:block; }
+  .skill-card .name{ font-size:0.78rem; color:var(--text); letter-spacing:0.5px; }
+
+  /* ---------- Projects ---------- */
+  .filter-row{
+    display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-bottom:44px;
+  }
+  .chip{
+    font-size:0.72rem; letter-spacing:1px; text-transform:uppercase;
+    padding:8px 16px; border-radius:999px; cursor:pointer;
+    border:1px solid rgba(0,240,255,0.25); color:var(--text-dim);
+    background:rgba(255,255,255,0.02);
+    transition:all .2s ease;
+  }
+  .chip:hover{ color:var(--text); border-color:var(--cyan); }
+  .chip.active{
+    background:linear-gradient(120deg, rgba(0,240,255,0.18), rgba(138,92,255,0.18));
+    color:var(--text); border-color:var(--cyan);
+  }
+
+  .projects-grid{
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(310px, 1fr)); gap:22px;
+  }
+  .project-card{
+    background:var(--panel); border:1px solid var(--panel-border); border-radius:var(--radius);
+    padding:26px; display:flex; flex-direction:column; gap:14px;
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    position:relative; overflow:hidden;
+    transition:transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+  }
+  .project-card::before{
+    content:''; position:absolute; inset:0; opacity:0;
+    background:radial-gradient(circle at 30% 0%, rgba(0,240,255,0.14), transparent 60%);
+    transition:opacity .3s ease; pointer-events:none;
+  }
+  .project-card:hover{
+    transform:translateY(-6px);
+    border-color:var(--cyan);
+    box-shadow:0 18px 40px rgba(0,240,255,0.14);
+  }
+  .project-card:hover::before{ opacity:1; }
+  .project-card.featured{
+    border-color:rgba(255,46,203,0.4);
+    background:linear-gradient(160deg, rgba(255,46,203,0.06), rgba(18,22,35,0.55));
+  }
+  .p-top{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .p-title{ font-family:'Orbitron', sans-serif; font-size:1rem; font-weight:700; color:var(--text); }
+  .badge-featured{
+    font-size:0.62rem; letter-spacing:1px; text-transform:uppercase;
+    color:var(--magenta); border:1px solid rgba(255,46,203,0.5);
+    padding:3px 9px; border-radius:999px; white-space:nowrap;
+  }
+  .p-desc{ font-size:0.83rem; color:var(--text-dim); flex:1; }
+  .p-tags{ display:flex; flex-wrap:wrap; gap:6px; }
+  .p-tag{
+    font-size:0.65rem; color:var(--cyan); border:1px solid rgba(0,240,255,0.3);
+    padding:3px 9px; border-radius:6px; background:rgba(0,240,255,0.05);
+  }
+  .p-link{
+    margin-top:6px; font-size:0.78rem; color:var(--cyan);
+    display:inline-flex; align-items:center; gap:6px;
+  }
+  .p-link .arrow{ transition:transform .2s ease; }
+  .project-card:hover .p-link .arrow{ transform:translateX(4px); }
+
+  /* ---------- Pipeline ---------- */
+  .pipeline-frame{
+    border:1px solid var(--panel-border); border-radius:var(--radius);
+    overflow:hidden; background:var(--panel);
+    box-shadow:0 0 50px rgba(138,92,255,0.12);
+  }
+  .pipeline-frame img{ display:block; width:100%; height:auto; }
+  .pipeline-caption{
+    text-align:center; color:var(--text-dim); font-size:0.82rem; margin-top:18px;
+  }
+
+  /* ---------- Contact ---------- */
+  .contact-panel{
+    background:var(--panel); border:1px solid var(--panel-border); border-radius:var(--radius);
+    padding:60px 6vw; text-align:center;
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    box-shadow:0 0 50px rgba(0,240,255,0.1);
+  }
+  .contact-panel h2{ font-size:clamp(1.6rem,4vw,2.4rem); margin-bottom:16px; }
+  .contact-panel p{ color:var(--text-dim); max-width:520px; margin:0 auto 34px; font-size:0.92rem; }
+  .contact-row{ display:flex; gap:18px; justify-content:center; flex-wrap:wrap; }
+
+  footer{
+    text-align:center; padding:40px 6vw 60px; color:var(--text-dim); font-size:0.78rem;
+  }
+  footer a{ color:var(--cyan); }
+
+  @media (max-width:860px){
+    .nav-links{
+      position:fixed; top:64px; right:0; height:calc(100vh - 64px); width:70vw; max-width:320px;
+      background:rgba(5,7,13,0.96); backdrop-filter:blur(16px);
+      flex-direction:column; padding:40px 30px; gap:1.8rem;
+      transform:translateX(100%); transition:transform .3s ease;
+      border-left:1px solid var(--panel-border);
+    }
+    .nav-links.open{ transform:translateX(0); }
+    .nav-toggle{
+      display:flex; flex-direction:column; gap:5px; cursor:pointer; z-index:60;
+      background:none; border:none; padding:6px;
+    }
+    .nav-toggle span{ width:22px; height:2px; background:var(--text); display:block; }
+    .about-grid{ grid-template-columns:1fr; gap:40px; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+<div class="grid-floor"></div>
+<div class="glow-orb one"></div>
+<div class="glow-orb two"></div>
+
+<nav>
+  <div class="brand">GK<span>.dev</span></div>
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#home" class="active">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#pipeline">Pipeline</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<header class="hero" id="home">
+  <div class="eyebrow">&lt; Available for DevOps &amp; Platform Engineering /&gt;</div>
+  <h1>Gaurav&nbsp;Khatri</h1>
+  <div class="hero-sub">I build <span id="typed"></span><span class="caret">&nbsp;</span></div>
+  <p class="hero-desc">
+    DevOps Engineer @ Sarv.com — building self-service infra tooling and scalable cloud-native
+    systems on Kubernetes, Docker, Terraform, and GitOps. I turn manual runbooks into automated,
+    auditable pipelines.
+  </p>
+  <div class="cta-row">
+    <a href="#projects" class="btn btn-primary">View Projects →</a>
+    <a href="https://www.linkedin.com/in/gaurav-khatri-devops/" target="_blank" rel="noopener" class="btn btn-ghost">Connect on LinkedIn</a>
+  </div>
+  <div class="scroll-hint"><span>SCROLL</span><span class="line"></span></div>
+</header>
+
+<main>
+
+  <section id="about">
+    <div class="section-head reveal">
+      <span class="section-tag">// 01 — About</span>
+      <h2 class="section-title">Who I <span class="accent">Am</span></h2>
+    </div>
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <p>I'm a <strong>DevOps Engineer at Sarv.com</strong>, focused on Kubernetes (EKS), Docker,
+        GitOps, and CI/CD. I care about the boring, load-bearing parts of infrastructure —
+        the parts that make a 2am rollback a 5-minute non-event instead of a 2-hour incident.</p>
+        <p>My work spans provisioning infrastructure with <strong>Terraform</strong>, automating
+        deployments with <strong>Jenkins &amp; ArgoCD</strong>, hardening clusters with
+        <strong>Kustomize &amp; kubeadm</strong>, and keeping systems observable with
+        <strong>Prometheus, Grafana &amp; the ELK stack</strong>.</p>
+        <p>I also write — turning what I learn on the job into public write-ups on LinkedIn,
+        then into working, open-source reference projects on GitHub.</p>
+        <div class="stat-row">
+          <div class="stat"><div class="num">17+</div><div class="label">Open-Source Repos</div></div>
+          <div class="stat"><div class="num">16</div><div class="label">Technical Write-ups</div></div>
+          <div class="stat"><div class="num">12+</div><div class="label">Tools &amp; Platforms</div></div>
+        </div>
+      </div>
+      <div class="terminal reveal">
+        <div class="terminal-bar">
+          <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+          <span class="terminal-title">gaurav@devops:~</span>
+        </div>
+        <div class="terminal-body">
+          <div class="l"><span class="prompt">$</span> <span class="cmd">whoami</span></div>
+          <div class="l out">gaurav-khatri · devops-engineer</div>
+          <div class="l"><span class="prompt">$</span> <span class="cmd">cat role.yaml</span></div>
+          <div class="l out"><span class="key">company:</span> <span class="val">Sarv.com</span></div>
+          <div class="l out"><span class="key">focus:</span> <span class="val">[kubernetes, gitops, ci-cd, iac]</span></div>
+          <div class="l out"><span class="key">status:</span> <span class="val">automating_everything: true</span></div>
+          <div class="l"><span class="prompt">$</span> <span class="cmd">kubectl get pods -n production</span></div>
+          <div class="l out">NAME                     READY   STATUS    RESTARTS</div>
+          <div class="l out">api-gateway-7d9f          1/1     Running   0</div>
+          <div class="l out">payments-service-3a2c     1/1     Running   0</div>
+          <div class="l"><span class="prompt">$</span> <span class="cmd">echo $DEPLOY_CONFIDENCE</span></div>
+          <div class="l out">high — ArgoCD auto-syncs, rollback is one click</div>
+          <div class="l"><span class="prompt">$</span> <span class="cmd">_</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills">
+    <div class="section-head reveal">
+      <span class="section-tag">// 02 — Toolkit</span>
+      <h2 class="section-title">Skills &amp; <span class="accent">Stack</span></h2>
+    </div>
+    <div class="skills-grid" id="skillsGrid"></div>
+  </section>
+
+  <section id="projects">
+    <div class="section-head reveal">
+      <span class="section-tag">// 03 — Work</span>
+      <h2 class="section-title">Featured <span class="accent">Projects</span></h2>
+    </div>
+    <div class="filter-row" id="filterRow"></div>
+    <div class="projects-grid" id="projectsGrid"></div>
+  </section>
+
+  <section id="pipeline">
+    <div class="section-head reveal">
+      <span class="section-tag">// 04 — In Motion</span>
+      <h2 class="section-title">A CI/CD Pipeline, <span class="accent">End to End</span></h2>
+    </div>
+    <div class="pipeline-frame reveal">
+      <img src="https://raw.githubusercontent.com/garuav0595/end-to-end-aws-devops-project/main/docs/pipeline-flow.gif" alt="Animated CI/CD pipeline: source, build, scan, push, deploy, sync, observe" loading="lazy" />
+    </div>
+    <p class="pipeline-caption">source → build → scan → push → deploy → sync → observe — from <a href="https://github.com/garuav0595/end-to-end-aws-devops-project" target="_blank" rel="noopener" style="color:var(--cyan)">end-to-end-aws-devops-project</a></p>
+  </section>
+
+  <section id="contact">
+    <div class="contact-panel reveal">
+      <h2>Let's Build Something <span class="accent" style="color:var(--cyan)">Reliable</span></h2>
+      <p>Open to DevOps, Platform Engineering, and SRE conversations. Reach out on LinkedIn or drop an email.</p>
+      <div class="contact-row">
+        <a href="https://www.linkedin.com/in/gaurav-khatri-devops/" target="_blank" rel="noopener" class="btn btn-primary">LinkedIn ↗</a>
+        <a href="mailto:gaurav.k@sarv.com" class="btn btn-ghost">Email Me</a>
+        <a href="https://github.com/garuav0595" target="_blank" rel="noopener" class="btn btn-ghost">GitHub ↗</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div>Designed &amp; built by Gaurav Khatri · Deployed on <a href="https://pages.github.com/" target="_blank" rel="noopener">GitHub Pages</a></div>
+  <div style="margin-top:6px;">© <span id="year"></span> garuav0595</div>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  /* ---------- Mobile nav ---------- */
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+  navToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+
+  /* ---------- Active nav on scroll ---------- */
+  const sections = document.querySelectorAll('main section, header.hero');
+  const navA = document.querySelectorAll('.nav-links a');
+  const navObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.getAttribute('id');
+        navA.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
+      }
+    });
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  sections.forEach(s => navObserver.observe(s));
+
+  /* ---------- Reveal on scroll ---------- */
+  const revealEls = document.querySelectorAll('.reveal');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => revealObserver.observe(el));
+
+  /* ---------- Typing effect ---------- */
+  const words = ['reliable infrastructure.', 'self-healing pipelines.', 'GitOps workflows.', 'scalable Kubernetes platforms.', 'automated everything.'];
+  const typedEl = document.getElementById('typed');
+  let wIndex = 0, cIndex = 0, deleting = false;
+  function tick(){
+    const word = words[wIndex];
+    if (!deleting) {
+      cIndex++;
+      typedEl.textContent = word.slice(0, cIndex);
+      if (cIndex === word.length) { deleting = true; setTimeout(tick, 1400); return; }
+    } else {
+      cIndex--;
+      typedEl.textContent = word.slice(0, cIndex);
+      if (cIndex === 0) { deleting = false; wIndex = (wIndex + 1) % words.length; }
+    }
+    setTimeout(tick, deleting ? 35 : 65);
+  }
+  tick();
+
+  /* ---------- Particle canvas background ---------- */
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+  function resize(){
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  function initParticles(){
+    const count = Math.min(90, Math.floor(window.innerWidth / 14));
+    particles = Array.from({length: count}, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 1.6 + 0.4,
+      vx: (Math.random() - 0.5) * 0.25,
+      vy: (Math.random() - 0.5) * 0.25,
+      hue: Math.random() > 0.5 ? '0,240,255' : '255,46,203'
+    }));
+  }
+  function step(){
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0) p.x = canvas.width; if (p.x > canvas.width) p.x = 0;
+      if (p.y < 0) p.y = canvas.height; if (p.y > canvas.height) p.y = 0;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${p.hue},0.55)`;
+      ctx.fill();
+    });
+    for (let i = 0; i < particles.length; i++){
+      for (let j = i + 1; j < particles.length; j++){
+        const a = particles[i], b = particles[j];
+        const dx = a.x - b.x, dy = a.y - b.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 120){
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
+          ctx.strokeStyle = `rgba(0,240,255,${0.12 * (1 - dist/120)})`;
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(step);
+  }
+  window.addEventListener('resize', () => { resize(); initParticles(); });
+  resize(); initParticles(); step();
+
+  /* ---------- Skills data ---------- */
+  const skills = [
+    ['☁️','AWS'], ['🌍','Terraform'], ['☸️','Kubernetes / EKS'], ['🔄','ArgoCD & GitOps'],
+    ['🛠️','Jenkins'], ['🐳','Docker'], ['⚙️','Ansible'], ['🛡️','Trivy'],
+    ['📊','Prometheus & Grafana'], ['📚','ELK Stack'], ['🧩','Kustomize'], ['🚀','kubeadm']
+  ];
+  const skillsGrid = document.getElementById('skillsGrid');
+  skillsGrid.innerHTML = skills.map(([ic, name]) => `
+    <div class="skill-card"><span class="ic">${ic}</span><div class="name">${name}</div></div>
+  `).join('');
+
+  /* ---------- Projects data ---------- */
+  const projects = [
+    { title:'end-to-end-aws-devops-project', desc:'Full AWS CI/CD pipeline: Terraform-provisioned VPC/EKS/RDS/Jenkins, a Dockerized Node.js app, a Jenkinsfile build/scan/push pipeline, and ArgoCD GitOps deployment to EKS.', tags:['Terraform','Jenkins','ArgoCD','EKS'], url:'https://github.com/garuav0595/end-to-end-aws-devops-project', featured:true, cat:'Featured' },
+    { title:'terraform-airgap-k8s', desc:'A complete Terraform project bootstrapping a highly-available kubeadm Kubernetes cluster on RHEL 9, entirely inside an air-gapped network.', tags:['Terraform','kubeadm','HA','Air-gapped'], url:'https://github.com/garuav0595/terraform-airgap-k8s', featured:true, cat:'Featured' },
+    { title:'argocd-gitops-quickstart', desc:'Minimal working ArgoCD install → Application CR → sync loop — the GitOps core loop end to end.', tags:['ArgoCD','GitOps'], url:'https://github.com/garuav0595/argocd-gitops-quickstart', cat:'GitOps' },
+    { title:'argocd-self-service-user-management', desc:'Self-service RBAC and user-management patterns for ArgoCD.', tags:['ArgoCD','RBAC'], url:'https://github.com/garuav0595/argocd-self-service-user-management', cat:'GitOps' },
+    { title:'argocd-3.5-gitops-notes', desc:"What's new in ArgoCD 3.5 for GitOps workflows.", tags:['ArgoCD','GitOps'], url:'https://github.com/garuav0595/argocd-3.5-gitops-notes', cat:'GitOps' },
+    { title:'kubernetes-kustomize-guide', desc:'Working Kustomize base/overlays example — same Deployment + Service, different replica counts for dev and prod.', tags:['Kubernetes','Kustomize'], url:'https://github.com/garuav0595/kubernetes-kustomize-guide', cat:'Kubernetes' },
+    { title:'kubernetes-kubeadm-cluster-setup', desc:'Step-by-step, script-backed kubeadm bootstrap for a multi-node Kubernetes cluster.', tags:['Kubernetes','kubeadm'], url:'https://github.com/garuav0595/kubernetes-kubeadm-cluster-setup', cat:'Kubernetes' },
+    { title:'kubernetes-hpa-configurable-tolerance', desc:"Kubernetes HPA's v1.33 configurable-tolerance feature, explained with working manifests.", tags:['Kubernetes','HPA'], url:'https://github.com/garuav0595/kubernetes-hpa-configurable-tolerance', cat:'Kubernetes' },
+    { title:'nodejs-aws-cli-docker-terraform-deploy', desc:'Deploying a Node.js app to AWS with the CLI, Docker, and Terraform.', tags:['AWS','Docker','Terraform'], url:'https://github.com/garuav0595/nodejs-aws-cli-docker-terraform-deploy', cat:'AWS' },
+    { title:'aws-autoscaling-alb-web-app', desc:'Auto Scaling Group + Application Load Balancer web app pattern on AWS.', tags:['AWS','ASG','ALB'], url:'https://github.com/garuav0595/aws-autoscaling-alb-web-app', cat:'AWS' },
+    { title:'understanding-aws-iam', desc:'IAM groups, roles, and policies explained with real policy JSON.', tags:['AWS','IAM'], url:'https://github.com/garuav0595/understanding-aws-iam', cat:'AWS' },
+    { title:'complete-terraform-guide', desc:'A practical, ground-up Terraform reference.', tags:['Terraform','IaC'], url:'https://github.com/garuav0595/complete-terraform-guide', cat:'AWS' },
+    { title:'ai-docker-container-monitor', desc:'AI-assisted Docker container health monitoring.', tags:['AI','Docker'], url:'https://github.com/garuav0595/ai-docker-container-monitor', cat:'AI & Automation' },
+    { title:'agentic-ai-devops-health-agent', desc:'An agentic AI health-check agent for DevOps workflows.', tags:['Agentic AI','DevOps'], url:'https://github.com/garuav0595/agentic-ai-devops-health-agent', cat:'AI & Automation' },
+    { title:'devops-mcp-model-context-protocol', desc:'Model Context Protocol (MCP) applied to AI-assisted DevOps.', tags:['MCP','AI'], url:'https://github.com/garuav0595/devops-mcp-model-context-protocol', cat:'AI & Automation' },
+    { title:'devops-process-toolchain-reference', desc:'The DevOps pipeline stage-by-stage, with tools and an audit checklist.', tags:['Reference'], url:'https://github.com/garuav0595/devops-process-toolchain-reference', cat:'Reference' },
+    { title:'devops-maturity-self-assessment', desc:'A scoreable checklist for real (not aspirational) DevOps maturity.', tags:['Reference'], url:'https://github.com/garuav0595/devops-maturity-self-assessment', cat:'Reference' },
+  ];
+
+  const categories = ['All', ...Array.from(new Set(projects.map(p => p.cat)))];
+  const filterRow = document.getElementById('filterRow');
+  const projectsGrid = document.getElementById('projectsGrid');
+
+  function renderProjects(filter){
+    const list = filter === 'All' ? projects : projects.filter(p => p.cat === filter);
+    projectsGrid.innerHTML = list.map(p => `
+      <div class="project-card ${p.featured ? 'featured' : ''} reveal in">
+        <div class="p-top">
+          <div class="p-title">${p.title}</div>
+          ${p.featured ? '<span class="badge-featured">Featured</span>' : ''}
+        </div>
+        <div class="p-desc">${p.desc}</div>
+        <div class="p-tags">${p.tags.map(t => `<span class="p-tag">${t}</span>`).join('')}</div>
+        <a class="p-link" href="${p.url}" target="_blank" rel="noopener">View on GitHub <span class="arrow">→</span></a>
+      </div>
+    `).join('');
+  }
+
+  filterRow.innerHTML = categories.map((c, i) => `<div class="chip ${i===0?'active':''}" data-cat="${c}">${c}</div>`).join('');
+  filterRow.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      filterRow.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      renderProjects(chip.dataset.cat);
+    });
+  });
+
+  renderProjects('All');
+</script>
+
+</body>
+</html>
